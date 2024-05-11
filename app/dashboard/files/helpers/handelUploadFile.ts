@@ -7,95 +7,80 @@ interface Category {
 
 const handelUploadFile = async (
     categoriesArry: Category[],
-    fileInputRef: React.RefObject<HTMLInputElement>,
+    fileInputRef: any,
     pendingFiles: string[],
-    setPendingFiles: React.Dispatch<React.SetStateAction<string[]>>,
+    setPendingFiles: Function,
     uploadedFileCount: number,
-    setUploadedFileCount: React.Dispatch<React.SetStateAction<number>>,
+    setUploadedFileCount: Function,
     keyWords: string
 ) => {
-    // التأكد من ملء جميع الحقول
-    for (let i = 0; i < categoriesArry.length; i++) {
-        if (categoriesArry[i].category_name === "") {
-            alert('يرجى تعبئة جميع حقول الإدخال بشكل صحيح!');
-            return;
-        }
-    }
-
     // التأكد من اختيار ملف
     if (!fileInputRef.current || !fileInputRef.current.files[0]) {
         alert("يرجى اختيار ملف واحد على الأقل!!");
         return;
     }
 
-    handelUploadCategory(categoriesArry);
+    // التحقق من ملء الحقول
+    for (let i = 0; i < categoriesArry.length; i++) {
+        if (categoriesArry[i].category_name === "") {
+            alert("يرجى تعبئة حقول الادخال بشكل صحيح!");
+            return;
+        }
+    }
 
-    // إعداد مسار الفئة الكامل
-    keyWords = keyWords.trim();
-    let fullCategory = [...categoriesArry.map(category => category.category_name)];
-    fullCategory.push(keyWords);
-    fullCategory = fullCategory.join('/');
-
-    // تحديث قائمة الملفات المعلقة
-    let c_pendingFiles = [...pendingFiles];
+    // التأكد من حجم الملف
     for (let i = 0; i < fileInputRef.current.files.length; i++) {
         const file_size = fileInputRef.current.files[i].size;
 
         if (file_size / (1024 * 1024) > 20) {
-            alert('حجم الملف كبير!! يرجى اختيار ملف أصغر من 20 ميجا بايت');
+            alert("حجم الملف كبير!! يرجى اختيار ملف أصغر من 20 ميجابايت");
             return;
         }
-        c_pendingFiles.unshift(fileInputRef.current.files[i].name);
     }
-    setPendingFiles(c_pendingFiles);
 
-    // رفع الملفات إلى تيليغرام
+    // رفع الملفات إلى التليجرام
+    let c_pendingFiles = [...pendingFiles];
     for (let j = 0; j < fileInputRef.current.files.length; j++) {
         let res = await addFileToStorage(fileInputRef, j);
-        const file_id = res.result.document.file_id;
-        const file_name = res.result.document.file_name;
-
-        // إضافة معرف الملف مع نفس السلسلة الكاملة للفئة إلى supabase
-        const { data, error } = await supabase
-            .from('files')
-            .insert({ 'file_name': file_name, 'file_id': file_id, 'full_category_path': fullCategory });
-
-        c_pendingFiles.pop();
-        const arry = [...c_pendingFiles];
-        setPendingFiles(arry);
-        setUploadedFileCount(prev => prev + 1);
-    }
-};
-
-const handelUploadCategory = async (categoriesArry: Category[]) => {
-    try {
-        const promises = categoriesArry.map(async category => {
+        if (res) {
+            const file_id = res.result.document.file_id;
+            const file_name = res.result.document.file_name;
+            const fullCategory = getFullCategory(categoriesArry, keyWords);
+            
             const { data, error } = await supabase
-                .from('categories')
-                .insert({ 'category_name': category.category_name, 'parent_category_name': category.parent_category_name });
+                .from("files")
+                .insert({ file_name: file_name, file_id: file_id, full_category_path: fullCategory });
 
             if (error) {
-                throw new Error(error.message);
+                console.error("Error adding file to database:", error);
+                return;
             }
-            return data;
-        });
 
-        const results = await Promise.all(promises);
-    } catch (error) {
-        console.error('Error adding rows:', error);
+            c_pendingFiles.pop();
+            const arry = [...c_pendingFiles];
+            setPendingFiles(arry);
+            setUploadedFileCount((prevCount: number) => prevCount + 1);
+        }
     }
 };
 
-const addFileToStorage = async (fileInputRef: React.RefObject<HTMLInputElement>, i: number) => {
+const getFullCategory = (categoriesArry: Category[], keyWords: string): string => {
+    keyWords = keyWords.trim();
+    let fullCategory = [...categoriesArry.map((category) => category.category_name)];
+    fullCategory.push(keyWords);
+    return fullCategory.join("/");
+};
+
+const addFileToStorage = async (fileInputRef: any, i: number) => {
     let formData = new FormData();
-    formData.append('document', fileInputRef.current.files[i]);
+    formData.append("document", fileInputRef.current.files[i]);
 
     try {
-        let telegramBot = '6678759621:AAE7lqLJx9uR-EbyYWwYokk-aZS4W9PF7Jg';
-        let chatId = '-1002134183114';
-        let res = await fetch(`https://api.telegram.org/bot${telegramBot}/sendDocument?chat_id=${chatId}`, {
+        let telgramBot = "6678759621:AAE7lqLJx9uR-EbyYWwYokk-aZS4W9PF7Jg";
+        let chatId = "-1002134183114";
+        let res = await fetch(`https://api.telegram.org/bot${telgramBot}/sendDocument?chat_id=${chatId}`, {
             method: "POST",
-            body: formData
+            body: formData,
         });
 
         if (res.ok) {
@@ -104,7 +89,8 @@ const addFileToStorage = async (fileInputRef: React.RefObject<HTMLInputElement>,
 
         return null;
     } catch (error) {
-        return error;
+        console.error("Error uploading file to Telegram:", error);
+        return null;
     }
 };
 
