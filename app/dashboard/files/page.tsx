@@ -34,8 +34,9 @@ const Page = () => {
 
     const handelAddCategory = async () => {
         setCategoriesArry([...categoriesArry, {category_name:"", parent_category_name:categoriesArry[categoriesArry.length - 1].category_name}]);
-        const a_categories = await getAvalibaleCategoriesArry(categoriesArry[categoriesArry.length - 1].category_name);
-        setAvalibaleCategoriesArry_Arry([...avalibaleCategoriesArry_Arry, a_categories]);
+        let a_categories:string[] = await getAvalibaleCategoriesArry(categoriesArry[categoriesArry.length - 1].category_name);
+        let copied_arry = [...avalibaleCategoriesArry_Arry];
+        copied_arry?.push(a_categories);
     };
 
     const fileInputRef = useRef<HTMLInputElement>(null);

@@ -1,6 +1,6 @@
 import supabase from "@/utils/supabase";
 
-const getAvalibaleCategoriesArry = async (parent_category_name: string) => {
+const getAvalibaleCategoriesArry = async (parent_category_name: string): string[] =>{
     const { data, error } = await supabase
         .from('categories')
         .select('category_name')
@@ -8,7 +8,7 @@ const getAvalibaleCategoriesArry = async (parent_category_name: string) => {
         
     if (error) {
         console.log(error);
-        return null;
+        return ;
     }
 
     if (data && data.length > 0) {
