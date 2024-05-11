@@ -42,7 +42,7 @@ const page = () => {
     <Card title='' bgColor='bg-gradient-to-r from-indigo-500 to-blue-500'>
         
         {
-          categoriesArry.map((category,i)=><CategoryInput
+          categoriesArry.map((category,i)=><CategoryInput key={i}
            avalibaleCategoriesArry={avalibaleCategoriesArry_Arry[i]} 
            title={'تصنيف'+(i+1)}
             onChange={(e)=>handelCategoryInputChange(e,i)} 
