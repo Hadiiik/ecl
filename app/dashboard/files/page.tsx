@@ -9,10 +9,10 @@ import getAvalibaleCategoriesArry from './helpers/getAvalibaleCategoriesArry'
 import handelUploadFile from './helpers/handelUploadFile'
 interface Category{
   category_name:string|"",
-  parent_category_name:string|null,
+  parent_category_name:string,
 }
 const Page = () => {  
-  const [categoriesArry,setCategoriesArry] = useState<Category[]>([{category_name:"",parent_category_name:null}])
+  const [categoriesArry,setCategoriesArry] = useState<Category[]>([{category_name:"",parent_category_name:""}])
   const [avalibaleCategoriesArry_Arry,setAvalibaleCategoriesArry_Arry] = useState([['ادلب','حلب','مؤتمت']])
   const [pendingFiles,setPendingFiles] = useState<string[]>([])
   const [uploadedFileCount,setUploadedFileCount] = useState(0)
