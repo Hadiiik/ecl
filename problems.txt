@@ -1,0 +1,10 @@
+#unableto signup a large amount of users !
+#adding the value of the option selected to the corresponding input field
+
+todos:
+    adding loading state 
+    working on adding the file to telegram done
+    and a progress tabel done
+problemes:
+    lag with states caused by async handelAddFile done
+    setFormError
