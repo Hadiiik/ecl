@@ -7,6 +7,7 @@ interface CategoryInputParams {
   onChange: Function;
   avalibaleCategoriesArry: string[] | [''];
   selectOnChange: Function;
+  key:number;
 }
 
 const CategoryInput = ({ title, value, onChange, avalibaleCategoriesArry, selectOnChange, key }: CategoryInputParams) => {
