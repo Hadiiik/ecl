@@ -12,7 +12,7 @@ interface Category{
   parent_category_name:string|null,
 }
 const CategoryInput = ({title,value,onChange,avalibaleCategoriesArry,selectOnChange,key}:CategoryInputParams) => {
-  const inputRef = useRef(null)
+  const inputRef = useRef()
   const handelAddValue = (e:React.ChangeEvent<HTMLInputElement>)=>{
     selectOnChange(e);
     inputRef.current.value = e.currentTarget.value;
