@@ -11,7 +11,7 @@ interface Category{
   category_name:string|"",
   parent_category_name:string|null,
 }
-const Main = () => {  
+const Page = () => {  
   const [categoriesArry,setCategoriesArry] = useState<Category[]>([{category_name:"",parent_category_name:null}])
   const [avalibaleCategoriesArry_Arry,setAvalibaleCategoriesArry_Arry] = useState([['ادلب','حلب','مؤتمت']])
   const [pendingFiles,setPendingFiles] = useState<string[]>([])
@@ -108,4 +108,4 @@ const Main = () => {
 }
 
 
-export default Main
+export default Page
