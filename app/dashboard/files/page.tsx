@@ -15,7 +15,7 @@ interface Category {
 
 const Page = () => {  
     const [categoriesArry, setCategoriesArry] = useState<Category[]>([{category_name:"", parent_category_name:""}]);
-    const [avalibaleCategoriesArry_Arry, setAvalibaleCategoriesArry_Arry] = useState<string[][]>([['ادلب','حلب','مؤتمت']]);
+    const [avalibaleCategoriesArry_Arry, setAvalibaleCategoriesArry_Arry] = useState([['ادلب','حلب','مؤتمت']]);
     const [pendingFiles, setPendingFiles] = useState<string[]>([]);
     const [uploadedFileCount, setUploadedFileCount] = useState<number>(0);
     const [keyWords, setKeyWords] = useState<string>('');
@@ -34,7 +34,7 @@ const Page = () => {
 
     const handelAddCategory = async () => {
         setCategoriesArry([...categoriesArry, {category_name:"", parent_category_name:categoriesArry[categoriesArry.length - 1].category_name}]);
-        let a_categories:string[] = await getAvalibaleCategoriesArry(categoriesArry[categoriesArry.length - 1].category_name);
+        let a_categories = await getAvalibaleCategoriesArry(categoriesArry[categoriesArry.length - 1].category_name);
         let copied_arry = [...avalibaleCategoriesArry_Arry];
         copied_arry?.push(a_categories);
     };
