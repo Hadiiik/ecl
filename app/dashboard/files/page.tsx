@@ -34,10 +34,10 @@ const Page = () => {
 
     const handelAddCategory = async () => {
         setCategoriesArry([...categoriesArry, {category_name:"", parent_category_name:categoriesArry[categoriesArry.length - 1].category_name}]);
+        let copied_arry = [...avalibaleCategoriesArry_Arry];
          getAvalibaleCategoriesArry(categoriesArry[categoriesArry.length - 1].category_name)
         .then(
           (a_categories)=>{
-            let copied_arry = [...avalibaleCategoriesArry_Arry];
             copied_arry?.push(a_categories);
           }
         )
