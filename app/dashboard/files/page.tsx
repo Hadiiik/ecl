@@ -94,8 +94,8 @@ const Page = () => {
   {pendingFiles.length>0&&<p className=' text-red-800 flex justify-center m-2 transition-all'>....جاري رفع {pendingFiles.length} ملف</p>}
   <div  className='  flex justify-center flex-col  my-2 max-h-64 overflow-y-scroll transition-all'>
       {
-        pendingFiles?.map(pendingFile=>
-          <div className='p-2  even:bg-blue-200 odd:bg-blue-300 flex justify-center my-1  rounded-md transition-all  cursor-pointer shadow-sm '>
+        pendingFiles?.map((pendingFile,i)=>
+          <div className='p-2  even:bg-blue-200 odd:bg-blue-300 flex justify-center my-1  rounded-md transition-all  cursor-pointer shadow-sm ' key={i}>
             <p className='  text-red-700 mx-2 items-center'>....جاري الرفع  {pendingFile}</p>
           </div>
         )
